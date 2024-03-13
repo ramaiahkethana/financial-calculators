@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <title>Credit Card Rental Charges Cacluator</title>
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+      .from-group {
+        margin-bottom: 10px;
+      }
+      .my-form {
+        padding: 10px;
+      }
+      #result {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <h1 style="font-size: 18px;">Lumpsum Calculator</h1>
+        <form class="form" id="lumpsum-form">
+            <div class="form-group">
+                <label for="final-balance">Final Balance</label>
+                <input type="number" id="final-balance" name="final-balance" placeholder="Enter the final balance" required>
+            </div>
+            <div class="form-group">
+                <label for="rate-of-return">Rate of Return (%)</label>
+                <input type="number" id="rate-of-return" name="rate-of-return" placeholder="Enter the annual rate of return" required>
+            </div>
+            <div class="form-group">
+                <label for="compounding-frequency">Compounding Frequency</label>
+                <input type="number" id="compounding-frequency" name="compounding-frequency" placeholder="Enter the number of times the interest is compounded per year" required>
+            </div>
+            <div class="form-group">
+                <label for="periods">Periods</label>
+                <input type="number" id="periods" name="periods" placeholder="Enter the number of years or months for the investment" required>
+            </div>
+        </form>
+        <div class="result" id="lumpsum-result">
+            
+        </div>
+    </div>
+
+    <script>
+        // Get the form elements
+        const finalBalance = document.getElementById("final-balance");
+        const rateOfReturn = document.getElementById("rate-of-return");
+        const compoundingFrequency = document.getElementById("compounding-frequency");
+        const periods = document.getElementById("periods");
+        const lumpsumResult = document.getElementById("lumpsum-result");
+
+        // Add an event listener to the form inputs
+        document.getElementById("lumpsum-form").addEventListener("input", calculateLumpsum);
+
+        // Define the function to calculate the lumpsum
+        function calculateLumpsum() {
+            // Get the input values
+            let f = parseFloat(finalBalance.value);
+            let r = parseFloat(rateOfReturn.value) / 100;
+            let n = parseFloat(compoundingFrequency.value);
+            let t = parseFloat(periods.value);
+
+            // Check if the inputs are valid numbers
+            if (isNaN(f) || isNaN(r) || isNaN(n) || isNaN(t)) {
+                // Clear the result
+                lumpsumResult.innerHTML = "";
+                return;
+            }
+
+            // Calculate the initial balance using the lumpsum formula
+            let p = f / Math.pow(1 + r / n, n * t);
+
+            // Round the result to two decimal places
+            p = p.toFixed(2);
+
+            // Display the result
+            lumpsumResult.innerHTML = `<p>The initial balance required to get ${f} at ${r * 100}% rate of return compounded ${n} times per year for ${t} periods is ${p}.</p>`;
+        }
+    </script>
+</body>
+</html>

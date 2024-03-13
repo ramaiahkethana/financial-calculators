@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Credit Card Rental Charges Cacluator</title>
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+      .from-group {
+        margin-bottom: 10px;
+      }
+      .my-form {
+        padding: 10px;
+      }
+      #result {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="font-size: 18px;  padding: 10px;">
+      Credit Card Rental Charges Calculator
+    </h1>
+    <form class="my-form">
+      <div class="from-group">
+        Amount: <input id="amount" value="5000" placeholder="Amount" />
+      </div>
+
+      <div class="from-group">
+        App Charges (%): <input id="appCharges" value="1.28" placeholder="app charges percentage" />
+      </div>
+
+      <div class="from-group">
+        Bank Charges (%): <input id="bankCharges" value="1" placeholder="bank charges percentage" />
+      </div>
+      
+      <div class="from-group">
+        <button class="btn btn-success" type="button" onclick="calculate()">
+          Calculate
+        </button>
+      </div>
+
+      <div class="">
+        <p id="result"></p>
+      </div>
+    </form>
+
+    <script>
+      function calculate() {
+        var amount = Number(document.getElementById("amount").value);
+        var appChargesPercentage = Number(document.getElementById("appCharges").value);
+        var bankChargesPercentage = Number(document.getElementById("bankCharges").value);
+
+        console.log('sd', amount)
+
+        const appCharges = toFixed(amount * (appChargesPercentage/100))
+        const appChargesGst = toFixed(appCharges * 0.18)
+        const bankCharges = toFixed((appCharges + appChargesGst + amount) * (bankChargesPercentage/100))
+        const bankChargesGst = toFixed(bankCharges * 0.18)
+
+        const totalCharges = appCharges + bankCharges + appChargesGst + bankChargesGst
+
+        const totalPercentage = toFixed((totalCharges / amount) * 100)
+
+        document.getElementById("result").innerHTML = `
+        <table class="table table-striped" style="width: 500px;">
+          <tr>
+            <td>App Charges</td>
+            <td>${appCharges} + ${appChargesGst} (GST) = ${appCharges + appChargesGst}</td>
+          </tr>
+          <tr>
+            <td>Bank Charges</td>
+            <td>${bankCharges} + ${bankChargesGst} (GST) = ${bankCharges + bankChargesGst} <br/></td>
+          </tr>
+          <tr>
+            <td>Total Charges</td>
+            <td>${toFixed(totalCharges)}</td>
+          </tr>
+          <tr>
+            <td>Total Charges Equals to</td>
+            <td>${toFixed(totalPercentage)}%</td>
+          </tr>
+        </table>
+        `
+      }
+
+      function toFixed(num, decimals = 2) {
+        return Number(num.toFixed(decimals))
+      }
+    </script>
+  </body>
+</html>

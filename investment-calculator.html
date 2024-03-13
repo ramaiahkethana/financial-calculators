@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <title>Credit Card Rental Charges Cacluator</title>
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+      .from-group {
+        margin-bottom: 10px;
+      }
+      .my-form {
+        padding: 10px;
+      }
+      #result {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <h1 style="font-size: 18px;">Lumpsum Calculator</h1>
+        <form class="form" id="lumpsum-form">
+            <div class="form-group">
+                <label for="initial-balance">Initial Balance</label>
+                <input type="number" id="initial-balance" name="initial-balance" value="2000" placeholder="Enter the final balance" required>
+            </div>
+            <div class="form-group">
+                <label for="rate-of-return">Rate of Return (%)</label>
+                <input type="number" id="rate-of-return" name="rate-of-return" value="12" placeholder="Enter the annual rate of return" required>
+            </div>
+            <!-- <div class="form-group">
+                <label for="compounding-frequency">Compounding Frequency</label>
+                <input type="number" id="compounding-frequency" name="compounding-frequency" placeholder="Enter the number of times the interest is compounded per year" required>
+            </div> -->
+            <div class="form-group">
+                <label for="periods">Investment Periods</label>
+                <input type="number" id="periods" name="periods" value="2" placeholder="Enter the number of years or months for the investment" required>
+            </div>
+
+            <div class="form-group">
+              <label for="increase-principle-percentage">Investment increase Every year</label>
+              <input type="number" id="increase-principle-percentage" value="10" name="increase-principle-percentage" placeholder="Enter the percentage of increase on the principle every year" required>
+            </div>
+
+            <div class="form-group">
+              <label for="extra-years">Leave Amount for Years Without Extra Investment</label>
+              <input type="number" id="extra-years" name="extra-years" value="0" placeholder="Extra Years" required>
+            </div>
+        </form>
+        <div class="result" id="lumpsum-result">
+            
+        </div>
+    </div>
+
+    <script>
+        // Get the form elements
+        const initialBalance = document.getElementById("initial-balance");
+        const rateOfReturn = document.getElementById("rate-of-return");
+        // const compoundingFrequency = document.getElementById("compounding-frequency");
+        const periods = document.getElementById("periods");
+        const lumpsumResult = document.getElementById("lumpsum-result");
+        const incrementPrinciplePercentage = document.getElementById("increase-principle-percentage");
+        const extraYears = document.getElementById("extra-years");
+
+        // Add an event listener to the form inputs
+        document.getElementById("lumpsum-form").addEventListener("input", calculateLumpsum);
+
+        // Define the function to calculate the lumpsum
+        function calculateLumpsum() {
+            // Get the input values
+            let p = parseFloat(initialBalance.value);
+            let r = parseFloat(rateOfReturn.value) / 100;
+            let t = parseFloat(periods.value);
+            let ic = parseFloat(incrementPrinciplePercentage.value);
+            let ey = parseFloat(extraYears.value) || 0;
+
+            let monthN = parseFloat(12)
+            let yearN = parseFloat(1)
+
+            let amountInvested = 0;
+
+            // Check if the inputs are valid numbers
+            if (isNaN(p) || isNaN(r) || isNaN(t)) {
+                // Clear the result
+                lumpsumResult.innerHTML = "";
+                return;
+            }
+
+            if (0) { // lumpsum
+              let n = yearN
+
+              // Calculate the initial balance using the lumpsum formula
+              let f = p * Math.pow(1 + r / yn, yn * t);
+  
+              // Round the result to two decimal places
+              f = Math.round(f);
+  
+              // Display the result
+              lumpsumResult.innerHTML = `<p>The Final balance is ${f}.</p>`;
+            } else { // sip
+              let i = (r / 12)
+              // let f = p * (Math.pow(1 + i, (t * 12)) - 1) * ((1 + i) / i)
+              let f = p
+              let np = p
+
+              for (let index = 0; index < t + ey; index++) {
+                let n = index < t ? monthN : yearN
+
+                let previousYearAmount = 0
+                if (index !== 0) {
+                  previousYearAmount = f * Math.pow(1 + r / n, n * 1)
+                }
+
+                if (index !== 0 && index < t) { // not for first year
+                  np = np + np * (ic / 100)
+                  np = parseFloat(np.toFixed(2))
+
+                  amountInvested += np * 1 * 12
+
+                  f = np * (Math.pow(1 + i, (1 * 12)) - 1) * ((1 + i) / i)
+                }
+
+                if (index === 0) {
+                  amountInvested += np * 1 * 12
+
+                  f = np * (Math.pow(1 + i, (1 * 12)) - 1) * ((1 + i) / i)
+                }
+                
+                if ( index < t) {
+                  f = parseFloat(previousYearAmount.toFixed(2)) + parseFloat(f.toFixed(2));
+                } else {
+                  f = parseFloat(previousYearAmount.toFixed(2));
+                }
+                console.log('af', index, t, f, np, previousYearAmount)
+              }
+
+
+              f = Math.round(f);
+
+              let withoutIncrement = p * (Math.pow(1 + i, (t * 12)) - 1) * ((1 + i) / i)
+              withoutIncrement = Math.round(withoutIncrement)
+
+              // Display the result
+              lumpsumResult.innerHTML = `
+                <p>The Final balance is ${withoutIncrement}.</p>
+                <p>The Final balance With Increment is ${f}, Amount Invested: ${amountInvested}.</p>
+              `;
+            }
+
+        }
+    </script>
+</body>
+</html>
